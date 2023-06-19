@@ -1,0 +1,23 @@
+{
+    "name": "asd",
+    "rootNamespace": "",
+    "references": [
+        "cell.runtime",
+        "crispy.eventbus.runtime",
+        "UniRx"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "NSubstitute.dll",
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

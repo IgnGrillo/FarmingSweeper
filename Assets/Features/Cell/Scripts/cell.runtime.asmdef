@@ -1,0 +1,7 @@
+﻿{
+  "name": "cell.runtime",
+  "references": [
+    "crispy.eventbus.runtime",
+    "UniRx"
+  ]
+}
