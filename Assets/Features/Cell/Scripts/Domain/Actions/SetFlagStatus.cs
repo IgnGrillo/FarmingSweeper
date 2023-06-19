@@ -4,7 +4,7 @@ namespace Features.Cell.Scripts.Domain.Actions
 {
     public class SetFlagStatus : ISetFlagStatus
     {
-        public void Execute(CellPresenter cellPresenter)
+        public void Execute(CellPresenter cellPresenter, FlagStatus status)
         {
             
         }

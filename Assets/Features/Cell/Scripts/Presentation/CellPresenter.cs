@@ -46,7 +46,7 @@ namespace Features.Cell.Scripts.Presentation
                           .Where(it => it == FlagStatus.NotPlaced)
                           .Do(_ =>
                            {
-                               _setFlagStatus.Execute(this);
+                               _setFlagStatus.Execute(this, FlagStatus.Placed);
                                _view.PlayPlaceFlagAnimation();
                            })
                           .Subscribe();

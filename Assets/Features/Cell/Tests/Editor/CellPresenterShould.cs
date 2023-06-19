@@ -80,31 +80,37 @@ namespace Features.Cell.Tests.Editor
         }
 
         [Test]
-        public void PlaceFlagWhenOnPlaceFlagIsCalledAndCellHasNoFlag()
+        public void SetFlagStatusAsPlacedWhenOnPlaceFlagIsCalledAndCellHasNoFlag()
         {
-            _getFlagStatus.Execute().Returns(Observable.Return(FlagStatus.NotPlaced));
+            GivenAGetFlagStatueThatReturns(FlagStatus.NotPlaced);
             GivenAPresenterInitialization();
-            _view.OnFlagged.Invoke();
-            _setFlagStatus.Received(1).Execute(_presenter);
+            WhenOnFlagged();
+            ThenSetFlagStatusWith(FlagStatus.Placed);
         }
-        
+
         [Test]
         public void PlayPlaceFlagAnimationWhenOnPlaceFlagIsCalledAndCellHasNoFlag()
         {
-            _getFlagStatus.Execute().Returns(Observable.Return(FlagStatus.NotPlaced));
+            GivenAGetFlagStatueThatReturns(FlagStatus.NotPlaced);
             GivenAPresenterInitialization();
-            _view.OnFlagged.Invoke();
-            _view.Received(1).PlayPlaceFlagAnimation();
+            WhenOnFlagged();
+            ThenPlayFaceFlagAnimation();
         }
-        
+
         private void GivenAPresenterInitialization() =>
                 _presenter.Initialize();
 
         private void GivenAGetCellTypeThatReturns(CellType cellType) =>
                 _getCellType.Execute().Returns(Observable.Return(cellType));
 
+        private void GivenAGetFlagStatueThatReturns(FlagStatus flagStatus) => 
+                _getFlagStatus.Execute().Returns(Observable.Return(flagStatus));
+
         private void WhenViewIsPressed() =>
                 _view.OnPressed.Invoke();
+
+        private void WhenOnFlagged() => 
+                _view.OnFlagged.Invoke();
 
         private void ThenGetCellTypeIsCalled() =>
                 _getCellType.Received(1).Execute();
@@ -117,8 +123,14 @@ namespace Features.Cell.Tests.Editor
 
         private void ThenPublishOnBlankSpacePressedIsCalled() =>
                 _publishOnBlankSpacePressed.Received(1).Execute();
-        
+
         private void ThenPlayOnBlankSpacePressedAnimation() =>
                 _view.Received(1).PlayOnBlankSpacePressedAnimation();
+
+        private void ThenSetFlagStatusWith(FlagStatus flagStatus) => 
+                _setFlagStatus.Received(1).Execute(_presenter, flagStatus);
+
+        private void ThenPlayFaceFlagAnimation() => 
+                _view.Received(1).PlayPlaceFlagAnimation();
     }
 }
