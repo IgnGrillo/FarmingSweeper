@@ -6,5 +6,6 @@ namespace Features.Cell.Scripts.Domain
     {
         Action OnPressed { get; set; }
         void PlayOnBombPressedAnimation();
+        void PlayOnBlankSpacePressedAnimation();
     }
 }

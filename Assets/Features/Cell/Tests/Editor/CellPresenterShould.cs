@@ -1,6 +1,5 @@
 ﻿using Features.Cell.Scripts.Domain;
 using Features.Cell.Scripts.Domain.Actions;
-using Features.Cell.Scripts.Domain.Events;
 using Features.Cell.Scripts.Presentation;
 using NSubstitute;
 using NUnit.Framework;
@@ -64,6 +63,15 @@ namespace Features.Cell.Tests.Editor
             WhenViewIsPressed();
             ThenPublishOnBlankSpacePressedIsCalled();
         }
+        
+        [Test]
+        public void PlayOnBlankSpacePressedAnimationWhenABlankSpaceWasPressed()
+        {
+            GivenAGetCellTypeThatReturns(CellType.Blank);
+            GivenAPresenterInitialization();
+            WhenViewIsPressed();
+            ThenPlayOnBlankSpacePressedAnimation();
+        }
 
         private void GivenAPresenterInitialization() =>
                 _presenter.Initialize();
@@ -85,5 +93,8 @@ namespace Features.Cell.Tests.Editor
 
         private void ThenPublishOnBlankSpacePressedIsCalled() =>
                 _publishOnBlankSpacePressed.Received(1).Execute();
+        
+        private void ThenPlayOnBlankSpacePressedAnimation() =>
+                _view.Received(1).PlayOnBlankSpacePressedAnimation();
     }
 }

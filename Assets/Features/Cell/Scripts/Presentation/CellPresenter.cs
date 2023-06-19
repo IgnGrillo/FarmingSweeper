@@ -24,32 +24,39 @@ namespace Features.Cell.Scripts.Presentation
             _view = view;
         }
 
-        public void Initialize()
-        {
-            _view.OnPressed += OnViewPressed;
-        }
+        public void Initialize() =>
+                _view.OnPressed += OnViewPressed;
 
-        private void OnViewPressed()
-        {
-            _getCellType.Execute()
-                        .Do(HandleCellType)
-                        .Subscribe();
-        }
+        private void OnViewPressed() =>
+                _getCellType.Execute()
+                            .Do(OnCellTypeObtained)
+                            .Subscribe();
 
-        private void HandleCellType(CellType cellType)
+        private void OnCellTypeObtained(CellType cellType)
         {
             switch (cellType)
             {
                 case CellType.Bomb:
-                    _view.PlayOnBombPressedAnimation();
-                    _publishOnBombPressed.Execute();
+                    OnBombPressed();
                     break;
                 case CellType.Blank:
-                    _publishOnBlankSpacePressed.Execute();
+                    OnBlankSpacePressed();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(cellType), cellType, null);
             }
+        }
+
+        private void OnBlankSpacePressed()
+        {
+            _view.PlayOnBlankSpacePressedAnimation();
+            _publishOnBlankSpacePressed.Execute();
+        }
+
+        private void OnBombPressed()
+        {
+            _view.PlayOnBombPressedAnimation();
+            _publishOnBombPressed.Execute();
         }
     }
 }

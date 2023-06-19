@@ -8,5 +8,6 @@ namespace Features.Cell.Scripts.Delivery
     {
         public Action OnPressed { get; set; }
         public void PlayOnBombPressedAnimation() { }
+        public void PlayOnBlankSpacePressedAnimation() { }
     }
 }
