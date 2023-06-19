@@ -41,6 +41,15 @@ namespace Features.Cell.Tests.Editor
             WhenViewIsPressed();
             ThenPublishOnBombPressedIsCalled();
         }
+        
+        [Test]
+        public void PlayOnBombPressedAnimationWhenABombWasPressed()
+        {
+            GivenAGetCellTypeThatReturns(CellType.Bomb);
+            GivenAPresenterInitialization();
+            WhenViewIsPressed();
+            _view.Received(1).PlayOnBombPressedAnimation();
+        }
 
         private void GivenAPresenterInitialization() => 
                 _presenter.Initialize();

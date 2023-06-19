@@ -1,4 +1,5 @@
-﻿using Features.Cell.Scripts.Domain;
+﻿using System;
+using Features.Cell.Scripts.Domain;
 using Features.Cell.Scripts.Domain.Actions;
 using Features.Cell.Tests.Editor;
 using UniRx;
@@ -29,8 +30,14 @@ namespace Features.Cell.Scripts.Presentation
         {
             _getCellType.Execute()
                         .Where(x => x == CellType.Bomb)
-                        .Do(_ => _publishOnBombPressed.Execute())
+                        .Do(OnBombPressed)
                         .Subscribe();
+        }
+
+        private void OnBombPressed(CellType _)
+        {
+            _view.PlayOnBombPressedAnimation();
+            _publishOnBombPressed.Execute();
         }
     }
 }
