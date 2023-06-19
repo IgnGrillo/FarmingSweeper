@@ -1,4 +1,4 @@
-﻿namespace Features.Cell.Tests.Editor
+﻿namespace Features.Cell.Scripts.Domain.Actions
 {
     class PublishOnBlankSpacePressed : IPublishOnBlankSpacePressed
     {

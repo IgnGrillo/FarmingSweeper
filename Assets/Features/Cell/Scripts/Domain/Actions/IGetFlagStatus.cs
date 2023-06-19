@@ -2,8 +2,8 @@
 
 namespace Features.Cell.Scripts.Domain.Actions
 {
-    public interface IGetCellType
+    public interface IGetFlagStatus
     {
-        IObservable<CellType> Execute();
+        IObservable<FlagStatus> Execute();
     }
 }

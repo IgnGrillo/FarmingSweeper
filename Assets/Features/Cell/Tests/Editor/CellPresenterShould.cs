@@ -13,6 +13,8 @@ namespace Features.Cell.Tests.Editor
         private IGetCellType _getCellType;
         private IPublishOnBombPressed _publishOnBombPressed;
         private IPublishOnBlankSpacePressed _publishOnBlankSpacePressed;
+        private IGetFlagStatus _getFlagStatus;
+        private ISetFlagStatus _setFlagStatus;
         private ICellView _view;
         private CellPresenter _presenter;
 
@@ -22,10 +24,14 @@ namespace Features.Cell.Tests.Editor
             _getCellType = For<IGetCellType>();
             _publishOnBombPressed = For<IPublishOnBombPressed>();
             _publishOnBlankSpacePressed = For<IPublishOnBlankSpacePressed>();
+            _getFlagStatus = For<IGetFlagStatus>();
+            _setFlagStatus = For<ISetFlagStatus>();
             _view = For<ICellView>();
             _presenter = new CellPresenter(_getCellType,
                     _publishOnBombPressed,
                     _publishOnBlankSpacePressed,
+                    _getFlagStatus,
+                    _setFlagStatus,
                     _view);
         }
 
@@ -73,6 +79,15 @@ namespace Features.Cell.Tests.Editor
             ThenPlayOnBlankSpacePressedAnimation();
         }
 
+        [Test]
+        public void PlaceFlagWhenOnPlaceFlagIsCalledAndCellHasNoFlag()
+        {
+            _getFlagStatus.Execute().Returns(Observable.Return(FlagStatus.NotPlaced));
+            GivenAPresenterInitialization();
+            _view.OnFlagged.Invoke();
+            _setFlagStatus.Received(1).Execute(_presenter);
+        }
+        
         private void GivenAPresenterInitialization() =>
                 _presenter.Initialize();
 
