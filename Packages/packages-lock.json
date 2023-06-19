@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.crispy.eventbus": {
+      "version": "https://github.com/IgnGrillo/EventBus.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "a3e8fc1861999b25fc5a0831cb7701076c361c93"
+    },
     "com.unity.2d.animation": {
       "version": "7.0.9",
       "depth": 1,
