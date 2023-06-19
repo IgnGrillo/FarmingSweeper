@@ -10,5 +10,6 @@ namespace Features.Cell.Scripts.Delivery
         public Action OnFlagged { get; set; }
         public void PlayOnBombPressedAnimation() { }
         public void PlayOnBlankSpacePressedAnimation() { }
+        public void PlayPlaceFlagAnimation() { }
     }
 }

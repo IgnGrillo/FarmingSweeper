@@ -88,6 +88,15 @@ namespace Features.Cell.Tests.Editor
             _setFlagStatus.Received(1).Execute(_presenter);
         }
         
+        [Test]
+        public void PlayPlaceFlagAnimationWhenOnPlaceFlagIsCalledAndCellHasNoFlag()
+        {
+            _getFlagStatus.Execute().Returns(Observable.Return(FlagStatus.NotPlaced));
+            GivenAPresenterInitialization();
+            _view.OnFlagged.Invoke();
+            _view.Received(1).PlayPlaceFlagAnimation();
+        }
+        
         private void GivenAPresenterInitialization() =>
                 _presenter.Initialize();
 

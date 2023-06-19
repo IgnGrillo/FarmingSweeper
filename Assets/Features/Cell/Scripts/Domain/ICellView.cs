@@ -1,4 +1,5 @@
 ﻿using System;
+using Features.Cell.Scripts.Presentation;
 
 namespace Features.Cell.Scripts.Domain
 {
@@ -8,5 +9,6 @@ namespace Features.Cell.Scripts.Domain
         Action OnFlagged { get; set; }
         void PlayOnBombPressedAnimation();
         void PlayOnBlankSpacePressedAnimation();
+        void PlayPlaceFlagAnimation();
     }
 }
