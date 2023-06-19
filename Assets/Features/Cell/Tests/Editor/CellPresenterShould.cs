@@ -13,6 +13,7 @@ namespace Features.Cell.Tests.Editor
     {
         private IGetCellType _getCellType;
         private IPublishOnBombPressed _publishOnBombPressed;
+        private IPublishOnBlankSpacePressed _publishOnBlankSpacePressed;
         private ICellView _view;
         private CellPresenter _presenter;
 
@@ -21,10 +22,14 @@ namespace Features.Cell.Tests.Editor
         {
             _getCellType = For<IGetCellType>();
             _publishOnBombPressed = For<IPublishOnBombPressed>();
+            _publishOnBlankSpacePressed = For<IPublishOnBlankSpacePressed>();
             _view = For<ICellView>();
-            _presenter = new CellPresenter(_getCellType, _publishOnBombPressed, _view);
+            _presenter = new CellPresenter(_getCellType,
+                    _publishOnBombPressed,
+                    _publishOnBlankSpacePressed,
+                    _view);
         }
-        
+
         [Test]
         public void GetCellTypeWhenPressed()
         {
@@ -41,29 +46,44 @@ namespace Features.Cell.Tests.Editor
             WhenViewIsPressed();
             ThenPublishOnBombPressedIsCalled();
         }
-        
+
         [Test]
         public void PlayOnBombPressedAnimationWhenABombWasPressed()
         {
             GivenAGetCellTypeThatReturns(CellType.Bomb);
             GivenAPresenterInitialization();
             WhenViewIsPressed();
-            _view.Received(1).PlayOnBombPressedAnimation();
+            ThenPlayOnBombPressedAnimation();
         }
 
-        private void GivenAPresenterInitialization() => 
+        [Test]
+        public void SendOnBlankSpacePressedEventWhenABlankSpaceWasPressed()
+        {
+            GivenAGetCellTypeThatReturns(CellType.Blank);
+            GivenAPresenterInitialization();
+            WhenViewIsPressed();
+            ThenPublishOnBlankSpacePressedIsCalled();
+        }
+
+        private void GivenAPresenterInitialization() =>
                 _presenter.Initialize();
 
-        private void GivenAGetCellTypeThatReturns(CellType cellType) => 
+        private void GivenAGetCellTypeThatReturns(CellType cellType) =>
                 _getCellType.Execute().Returns(Observable.Return(cellType));
 
-        private void WhenViewIsPressed() => 
+        private void WhenViewIsPressed() =>
                 _view.OnPressed.Invoke();
 
-        private void ThenGetCellTypeIsCalled() => 
+        private void ThenGetCellTypeIsCalled() =>
                 _getCellType.Received(1).Execute();
 
-        private void ThenPublishOnBombPressedIsCalled() => 
+        private void ThenPublishOnBombPressedIsCalled() =>
                 _publishOnBombPressed.Received(1).Execute();
+
+        private void ThenPlayOnBombPressedAnimation() =>
+                _view.Received(1).PlayOnBombPressedAnimation();
+
+        private void ThenPublishOnBlankSpacePressedIsCalled() =>
+                _publishOnBlankSpacePressed.Received(1).Execute();
     }
 }

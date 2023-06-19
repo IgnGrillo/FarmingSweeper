@@ -10,14 +10,17 @@ namespace Features.Cell.Scripts.Presentation
     {
         private readonly IGetCellType _getCellType;
         private readonly IPublishOnBombPressed _publishOnBombPressed;
+        private readonly IPublishOnBlankSpacePressed _publishOnBlankSpacePressed;
         private readonly ICellView _view;
 
         public CellPresenter(IGetCellType getCellType,
                              IPublishOnBombPressed publishOnBombPressed,
+                             IPublishOnBlankSpacePressed publishOnBlankSpacePressed,
                              ICellView view)
         {
             _getCellType = getCellType;
             _publishOnBombPressed = publishOnBombPressed;
+            _publishOnBlankSpacePressed = publishOnBlankSpacePressed;
             _view = view;
         }
 
@@ -29,15 +32,24 @@ namespace Features.Cell.Scripts.Presentation
         private void OnViewPressed()
         {
             _getCellType.Execute()
-                        .Where(x => x == CellType.Bomb)
-                        .Do(OnBombPressed)
+                        .Do(HandleCellType)
                         .Subscribe();
         }
 
-        private void OnBombPressed(CellType _)
+        private void HandleCellType(CellType cellType)
         {
-            _view.PlayOnBombPressedAnimation();
-            _publishOnBombPressed.Execute();
+            switch (cellType)
+            {
+                case CellType.Bomb:
+                    _view.PlayOnBombPressedAnimation();
+                    _publishOnBombPressed.Execute();
+                    break;
+                case CellType.Blank:
+                    _publishOnBlankSpacePressed.Execute();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(cellType), cellType, null);
+            }
         }
     }
 }
