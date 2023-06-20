@@ -15,6 +15,7 @@ namespace Features.Cell.Tests.Editor
         private IPublishOnBlankSpacePressed _publishOnBlankSpacePressed;
         private IGetFlagStatus _getFlagStatus;
         private ISetFlagStatus _setFlagStatus;
+        private IGetAmountOfBombsNearby _getAmountOfBombsNearby;
         private ICellView _view;
         private CellPresenter _presenter;
 
@@ -26,12 +27,14 @@ namespace Features.Cell.Tests.Editor
             _publishOnBlankSpacePressed = For<IPublishOnBlankSpacePressed>();
             _getFlagStatus = For<IGetFlagStatus>();
             _setFlagStatus = For<ISetFlagStatus>();
+            _getAmountOfBombsNearby = For<IGetAmountOfBombsNearby>();
             _view = For<ICellView>();
             _presenter = new CellPresenter(_getCellType,
                     _publishOnBombPressed,
                     _publishOnBlankSpacePressed,
                     _getFlagStatus,
                     _setFlagStatus,
+                    _getAmountOfBombsNearby,
                     _view);
         }
 
@@ -115,6 +118,13 @@ namespace Features.Cell.Tests.Editor
             ThenPlayRemoveFlagAnimation();
         }
 
+        [Test]
+        public void DisplayAmountOfBombsNearbyNumberOnInitialization()
+        {
+            WhenInitialized();
+            ThenGetAmountOfBombsIsCalled();
+        }
+
         private void GivenAPresenterInitialization() =>
                 _presenter.Initialize();
 
@@ -129,6 +139,9 @@ namespace Features.Cell.Tests.Editor
 
         private void WhenOnFlagged() => 
                 _view.OnFlagged.Invoke();
+
+        private void WhenInitialized() => 
+                _presenter.Initialize();
 
         private void ThenGetCellTypeIsCalled() =>
                 _getCellType.Received(1).Execute();
@@ -150,8 +163,11 @@ namespace Features.Cell.Tests.Editor
 
         private void ThenPlayPlaceFlagAnimation() => 
                 _view.Received(1).PlayPlaceFlagAnimation();
-        
+
         private void ThenPlayRemoveFlagAnimation() => 
                 _view.Received(1).PlayRemoveFlagAnimation();
+
+        private void ThenGetAmountOfBombsIsCalled() => 
+                _getAmountOfBombsNearby.Received(1).Execute();
     }
 }

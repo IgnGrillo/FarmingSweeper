@@ -12,6 +12,7 @@ namespace Features.Cell.Scripts.Presentation
         private readonly IPublishOnBlankSpacePressed _publishOnBlankSpacePressed;
         private readonly IGetFlagStatus _getFlagStatus;
         private readonly ISetFlagStatus _setFlagStatus;
+        private readonly IGetAmountOfBombsNearby _getAmountOfBombsNearby;
         private readonly ICellView _view;
 
         public CellPresenter(IGetCellType getCellType,
@@ -19,6 +20,7 @@ namespace Features.Cell.Scripts.Presentation
                              IPublishOnBlankSpacePressed publishOnBlankSpacePressed,
                              IGetFlagStatus getFlagStatus,
                              ISetFlagStatus setFlagStatus,
+                             IGetAmountOfBombsNearby getAmountOfBombsNearby,
                              ICellView view)
         {
             _getCellType = getCellType;
@@ -26,6 +28,7 @@ namespace Features.Cell.Scripts.Presentation
             _publishOnBlankSpacePressed = publishOnBlankSpacePressed;
             _getFlagStatus = getFlagStatus;
             _setFlagStatus = setFlagStatus;
+            _getAmountOfBombsNearby = getAmountOfBombsNearby;
             _view = view;
         }
 
@@ -33,6 +36,7 @@ namespace Features.Cell.Scripts.Presentation
         {
             _view.OnPressed += OnViewPressed;
             _view.OnFlagged += OnViewFlagged;
+            _getAmountOfBombsNearby.Execute().Do(_view.DisplayAmountOfBombsNearby).Subscribe();
         }
 
         private void OnViewPressed() => _getCellType.Execute()

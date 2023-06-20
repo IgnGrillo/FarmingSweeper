@@ -10,5 +10,6 @@ namespace Features.Cell.Scripts.Domain
         void PlayOnBlankSpacePressedAnimation();
         void PlayPlaceFlagAnimation();
         void PlayRemoveFlagAnimation();
+        void DisplayAmountOfBombsNearby(int amountOfBombsNearby);
     }
 }
