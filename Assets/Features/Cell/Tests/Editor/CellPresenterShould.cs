@@ -1,4 +1,5 @@
-﻿using Features.Cell.Scripts.Domain;
+﻿using System;
+using Features.Cell.Scripts.Domain;
 using Features.Cell.Scripts.Domain.Actions;
 using Features.Cell.Scripts.Presentation;
 using NSubstitute;
@@ -119,10 +120,19 @@ namespace Features.Cell.Tests.Editor
         }
 
         [Test]
-        public void DisplayAmountOfBombsNearbyNumberOnInitialization()
+        public void GetAmountOfBombsNearbyIsCalledWhenPresenterIsInitialized()
         {
             WhenInitialized();
             ThenGetAmountOfBombsIsCalled();
+        }
+        
+        [Test]
+        public void DisplayAmountOfBombsNearbyWhenPresenterIsInitialized()
+        {
+            var initialAmountOfBombs = new Random().Next(0, 100);
+            GivenAGetAmountOfBombsThatReturn(initialAmountOfBombs);
+            WhenInitialized();
+            ThenDisplayAmountOfBombsIsCalledWith(initialAmountOfBombs);
         }
 
         private void GivenAPresenterInitialization() =>
@@ -133,6 +143,9 @@ namespace Features.Cell.Tests.Editor
 
         private void GivenAGetFlagStatueThatReturns(FlagStatus flagStatus) => 
                 _getFlagStatus.Execute().Returns(Observable.Return(flagStatus));
+
+        private void GivenAGetAmountOfBombsThatReturn(int initialAmountOfBombs) => 
+                _getAmountOfBombsNearby.Execute().Returns(Observable.Return(initialAmountOfBombs));
 
         private void WhenViewIsPressed() =>
                 _view.OnPressed.Invoke();
@@ -169,5 +182,8 @@ namespace Features.Cell.Tests.Editor
 
         private void ThenGetAmountOfBombsIsCalled() => 
                 _getAmountOfBombsNearby.Received(1).Execute();
+
+        private void ThenDisplayAmountOfBombsIsCalledWith(int initialAmountOfBombs) => 
+                _view.Received(1).DisplayAmountOfBombsNearby(initialAmountOfBombs);
     }
 }

@@ -36,7 +36,9 @@ namespace Features.Cell.Scripts.Presentation
         {
             _view.OnPressed += OnViewPressed;
             _view.OnFlagged += OnViewFlagged;
-            _getAmountOfBombsNearby.Execute().Do(_view.DisplayAmountOfBombsNearby).Subscribe();
+            _getAmountOfBombsNearby.Execute()
+                                   .Do(_ => _view.DisplayAmountOfBombsNearby(_))
+                                   .Subscribe();
         }
 
         private void OnViewPressed() => _getCellType.Execute()
@@ -88,12 +90,13 @@ namespace Features.Cell.Scripts.Presentation
                     throw new ArgumentOutOfRangeException(nameof(flagStatus), flagStatus, null);
             }
         }
+
         private void PlaceFlag()
         {
             _setFlagStatus.Execute(this, FlagStatus.Placed);
             _view.PlayPlaceFlagAnimation();
         }
-        
+
         private void RemoveFlag()
         {
             _setFlagStatus.Execute(this, FlagStatus.Removed);
