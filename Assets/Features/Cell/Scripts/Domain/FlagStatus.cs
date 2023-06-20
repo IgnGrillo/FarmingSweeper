@@ -2,7 +2,7 @@
 {
     public enum FlagStatus
     {
-        NotPlaced = 0,
+        Removed = 0,
         Placed = 1
     }
 }

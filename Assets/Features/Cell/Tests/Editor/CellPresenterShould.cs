@@ -82,7 +82,7 @@ namespace Features.Cell.Tests.Editor
         [Test]
         public void SetFlagStatusAsPlacedWhenOnPlaceFlagIsCalledAndCellHasNoFlag()
         {
-            GivenAGetFlagStatueThatReturns(FlagStatus.NotPlaced);
+            GivenAGetFlagStatueThatReturns(FlagStatus.Removed);
             GivenAPresenterInitialization();
             WhenOnFlagged();
             ThenSetFlagStatusWith(FlagStatus.Placed);
@@ -91,10 +91,19 @@ namespace Features.Cell.Tests.Editor
         [Test]
         public void PlayPlaceFlagAnimationWhenOnPlaceFlagIsCalledAndCellHasNoFlag()
         {
-            GivenAGetFlagStatueThatReturns(FlagStatus.NotPlaced);
+            GivenAGetFlagStatueThatReturns(FlagStatus.Removed);
             GivenAPresenterInitialization();
             WhenOnFlagged();
             ThenPlayFaceFlagAnimation();
+        }
+        
+        [Test]
+        public void SetFlagStatusAsNotPlacedWhenOnPlaceFlagIsCalledAndCellHasFlagPlaced()
+        {
+            GivenAGetFlagStatueThatReturns(FlagStatus.Placed);
+            GivenAPresenterInitialization();
+            WhenOnFlagged();
+            ThenSetFlagStatusWith(FlagStatus.Removed);
         }
 
         private void GivenAPresenterInitialization() =>

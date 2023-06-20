@@ -35,22 +35,13 @@ namespace Features.Cell.Scripts.Presentation
             _view.OnFlagged += OnViewFlagged;
         }
 
-        private void OnViewPressed() =>
-                _getCellType.Execute()
-                            .Do(OnCellTypeObtained)
-                            .Subscribe();
+        private void OnViewPressed() => _getCellType.Execute()
+                                                    .Do(OnCellTypeObtained)
+                                                    .Subscribe();
 
-        private void OnViewFlagged()
-        {
-            _getFlagStatus.Execute()
-                          .Where(it => it == FlagStatus.NotPlaced)
-                          .Do(_ =>
-                           {
-                               _setFlagStatus.Execute(this, FlagStatus.Placed);
-                               _view.PlayPlaceFlagAnimation();
-                           })
-                          .Subscribe();
-        }
+        private void OnViewFlagged() => _getFlagStatus.Execute()
+                                                      .Do(OnFlagStatusObtained)
+                                                      .Subscribe();
 
         private void OnCellTypeObtained(CellType cellType)
         {
@@ -77,6 +68,31 @@ namespace Features.Cell.Scripts.Presentation
         {
             _view.PlayOnBombPressedAnimation();
             _publishOnBombPressed.Execute();
+        }
+
+        private void OnFlagStatusObtained(FlagStatus flagStatus)
+        {
+            switch (flagStatus)
+            {
+                case FlagStatus.Placed:
+                    RemoveFlag();
+                    break;
+                case FlagStatus.Removed:
+                    PlaceFlag();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(flagStatus), flagStatus, null);
+            }
+        }
+        private void PlaceFlag()
+        {
+            _setFlagStatus.Execute(this, FlagStatus.Placed);
+            _view.PlayPlaceFlagAnimation();
+        }
+        
+        private void RemoveFlag()
+        {
+            _setFlagStatus.Execute(this, FlagStatus.Removed);
         }
     }
 }

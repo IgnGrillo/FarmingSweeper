@@ -7,7 +7,7 @@ namespace Features.Cell.Scripts.Domain.Actions
     {
         public IObservable<FlagStatus> Execute()
         {
-            return Observable.Return(FlagStatus.NotPlaced);
+            return Observable.Return(FlagStatus.Removed);
         }
     }
 }
