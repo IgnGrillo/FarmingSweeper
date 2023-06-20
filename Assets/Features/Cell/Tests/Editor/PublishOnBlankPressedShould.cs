@@ -11,14 +11,14 @@ namespace Features.Cell.Tests.Editor
         [Test]
         public void PublishOnBlankPressedWhenExecute()
         {
-            var publishOnBlankPressed = GivenAPresenter();
+            var publishOnBlankPressed = GivenAnAction();
             GivenAClearEventBus();
             GivenAnOnBlankSpacePressedEventBusSubscription();
             WhenExecute(publishOnBlankPressed);
             ThenEventSubscribedWasCalled();
         }
 
-        private static PublishOnBlankPressed GivenAPresenter() => 
+        private static PublishOnBlankPressed GivenAnAction() => 
                 new();
 
         private static void GivenAClearEventBus() =>

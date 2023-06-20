@@ -11,14 +11,14 @@ namespace Features.Cell.Tests.Editor
         [Test]
         public void PublishOnBombPressedWhenExecute()
         {
-            var publishOnBombPressed = GivenAPresenter();
+            var publishOnBombPressed = GivenAnAction();
             GivenAClearEventBus();
             GivenAnOnBombPressedEventBusSubscription();
             WhenExecute(publishOnBombPressed);
             ThenEventSubscribedWasCalled();
         }
 
-        private static PublishOnBombPressed GivenAPresenter() => 
+        private static PublishOnBombPressed GivenAnAction() =>
                 new();
 
         private static void GivenAClearEventBus() =>
