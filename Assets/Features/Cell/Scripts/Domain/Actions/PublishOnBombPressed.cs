@@ -1,4 +1,5 @@
 ﻿using Features.Cell.Scripts.Domain.Events;
+using UnityEngine;
 
 namespace Features.Cell.Scripts.Domain.Actions
 {
@@ -6,6 +7,7 @@ namespace Features.Cell.Scripts.Domain.Actions
     {
         public void Execute()
         {
+            Debug.Log("PublishOnBombPressed");
             EventBus.Publish(new OnBombPressed());
         }
     }

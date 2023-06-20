@@ -3,6 +3,7 @@ using Features.Cell.Scripts.Domain.Actions;
 using Features.Cell.Scripts.Presentation;
 using NSubstitute;
 using NUnit.Framework;
+using UnityEngine;
 using static NSubstitute.Substitute;
 
 namespace Features.Cell.Tests.Editor
@@ -13,6 +14,7 @@ namespace Features.Cell.Tests.Editor
         private IPublishOnBlankPressed _publishOnBlankPressed;
         private IUpdateCellSecondaryStatus _updateCellSecondaryStatus;
         private IPublishOnCellSecondaryStatusChange _publishOnCellSecondaryStatusChange;
+        private IGetColorOfCell _getColorOfCell;
         private ICellView _view;
         private CellPresenter _presenter;
 
@@ -23,12 +25,14 @@ namespace Features.Cell.Tests.Editor
             _publishOnBlankPressed = For<IPublishOnBlankPressed>();
             _publishOnCellSecondaryStatusChange = For<IPublishOnCellSecondaryStatusChange>();
             _updateCellSecondaryStatus = For<IUpdateCellSecondaryStatus>();
+            _getColorOfCell = For<IGetColorOfCell>();
             _view = For<ICellView>();
             _presenter = new CellPresenter(
                     _publishOnBombPressed,
                     _publishOnBlankPressed,
                     _updateCellSecondaryStatus,
                     _publishOnCellSecondaryStatusChange,
+                    _getColorOfCell,
                     _view);
         }
 
@@ -58,6 +62,19 @@ namespace Features.Cell.Tests.Editor
             WhenViewIsPressed();
             ThenPublishOnBlankSpacePressedIsCalled();
         }
+        
+        [Test]
+        public void DisplayAmountOfBombsNearbyWhenABlankSpaceWasPressed()
+        {
+            var bombsNearby = 5;
+            var colorObtained = Random.ColorHSV();
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(bombsNearby:bombsNearby);
+            GivenAGetColorOfCellThatReturnsColorWith(bombsNearby, colorObtained);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
+            WhenViewIsPressed();
+            ThenDisplayAmountOfBombsWith(bombsNearby, colorObtained);
+        }
+
 
         [Test]
         public void PlayOnBlankSpacePressedAnimationWhenABlankSpaceWasPressed()
@@ -112,7 +129,7 @@ namespace Features.Cell.Tests.Editor
             WhenOnFlagged();
             ThenUpdateSecondaryStatueTo(aMineSweeperCellWithBomb, CellSecondaryStatus.Mystery);
         }
-        
+
         [Test]
         public void PublishOnCellSecondaryStatusChangeToMysteryWhenOnPlaceFlagIsCalledAndCellHasFlag()
         {
@@ -121,7 +138,7 @@ namespace Features.Cell.Tests.Editor
             WhenOnFlagged();
             ThenPublishOnSecondaryStatusChangeTo(CellSecondaryStatus.Mystery);
         }
-        
+
         [Test]
         public void PlayPlayBlankAnimationWhenOnSecondaryPressedIsCalledAndCellHasMysterySign()
         {
@@ -130,7 +147,7 @@ namespace Features.Cell.Tests.Editor
             WhenOnFlagged();
             ThenPlayBlankAnimation();
         }
-        
+
         [Test]
         public void SetFlagStatusAsBlankWhenOnSecondaryPressedIsCalledAndCellHasMysterySign()
         {
@@ -139,7 +156,7 @@ namespace Features.Cell.Tests.Editor
             WhenOnFlagged();
             ThenUpdateSecondaryStatueTo(aMineSweeperCellWithBomb, CellSecondaryStatus.Blank);
         }
-        
+
         [Test]
         public void PublishOnCellSecondaryStatusChangeToBlankWhenOnPlaceFlagIsCalledAndCellHasMysterySign()
         {
@@ -157,6 +174,9 @@ namespace Features.Cell.Tests.Editor
         private void GivenAPresenterInitialization(MineSweeperCell mineSweeperCell) =>
                 _presenter.Initialize(mineSweeperCell);
 
+        private void GivenAGetColorOfCellThatReturnsColorWith(int bombsNearby = 1, Color colorObtained = default) => 
+                _getColorOfCell.Execute(bombsNearby).Returns(colorObtained);
+
         private void WhenViewIsPressed() =>
                 _view.OnPressed.Invoke();
 
@@ -171,6 +191,9 @@ namespace Features.Cell.Tests.Editor
 
         private void ThenPublishOnBlankSpacePressedIsCalled() =>
                 _publishOnBlankPressed.Received(1).Execute();
+        
+        private void ThenDisplayAmountOfBombsWith(int bombsNearby, Color colorObtained) => 
+                _view.DisplayAmountOfBombsNearby(bombsNearby, colorObtained);
 
         private void ThenPlayOnBlankSpacePressedAnimation() =>
                 _view.Received(1).PlayOnBlankSpacePressedAnimation();

@@ -1,7 +1,18 @@
-﻿{
-  "name": "cell.runtime",
-  "references": [
-    "crispy.eventbus.runtime",
-    "UniRx"
-  ]
+{
+    "name": "cell.runtime",
+    "rootNamespace": "",
+    "references": [
+        "crispy.eventbus.runtime",
+        "UniRx",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

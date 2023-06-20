@@ -11,18 +11,21 @@ namespace Features.Cell.Scripts.Presentation
         private readonly IPublishOnBlankPressed _publishOnBlankPressed;
         private readonly IUpdateCellSecondaryStatus _onCellSecondaryStatusChange;
         private readonly IPublishOnCellSecondaryStatusChange _publishOnCellSecondaryStatusChange;
+        private readonly IGetColorOfCell _getColorOfCell;
         private readonly ICellView _view;
 
         public CellPresenter(IPublishOnBombPressed publishOnBombPressed,
                              IPublishOnBlankPressed publishOnBlankPressed,
                              IUpdateCellSecondaryStatus onCellSecondaryStatusChange,
                              IPublishOnCellSecondaryStatusChange publishOnCellSecondaryStatusChange,
+                             IGetColorOfCell getColorOfCell,
                              ICellView view)
         {
             _publishOnBombPressed = publishOnBombPressed;
             _publishOnBlankPressed = publishOnBlankPressed;
             _onCellSecondaryStatusChange = onCellSecondaryStatusChange;
             _publishOnCellSecondaryStatusChange = publishOnCellSecondaryStatusChange;
+            _getColorOfCell = getColorOfCell;
             _view = view;
         }
 
@@ -55,7 +58,8 @@ namespace Features.Cell.Scripts.Presentation
         private void OnBlankSpacePressed(MineSweeperCell mineSweeperCell)
         {
             _view.PlayOnBlankSpacePressedAnimation();
-            _view.DisplayAmountOfBombsNearby(mineSweeperCell.BombsNearby);
+            _view.DisplayAmountOfBombsNearby(mineSweeperCell.BombsNearby,
+                    _getColorOfCell.Execute(mineSweeperCell.BombsNearby));
             _publishOnBlankPressed.Execute();
         }
 
