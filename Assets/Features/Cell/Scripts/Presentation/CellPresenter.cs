@@ -1,7 +1,6 @@
 ﻿using System;
 using Features.Cell.Scripts.Domain;
 using Features.Cell.Scripts.Domain.Actions;
-using Features.Cell.Tests.Editor;
 using UniRx;
 
 namespace Features.Cell.Scripts.Presentation
