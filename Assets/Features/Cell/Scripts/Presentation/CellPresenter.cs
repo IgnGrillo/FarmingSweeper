@@ -93,6 +93,7 @@ namespace Features.Cell.Scripts.Presentation
         private void RemoveFlag()
         {
             _setFlagStatus.Execute(this, FlagStatus.Removed);
+            _view.PlayRemoveFlagAnimation();
         }
     }
 }

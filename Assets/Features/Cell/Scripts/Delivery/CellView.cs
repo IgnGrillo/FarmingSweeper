@@ -11,5 +11,6 @@ namespace Features.Cell.Scripts.Delivery
         public void PlayOnBombPressedAnimation() { }
         public void PlayOnBlankSpacePressedAnimation() { }
         public void PlayPlaceFlagAnimation() { }
+        public void PlayRemoveFlagAnimation() { }
     }
 }

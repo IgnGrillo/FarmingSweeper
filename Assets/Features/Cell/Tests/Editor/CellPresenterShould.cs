@@ -94,7 +94,7 @@ namespace Features.Cell.Tests.Editor
             GivenAGetFlagStatueThatReturns(FlagStatus.Removed);
             GivenAPresenterInitialization();
             WhenOnFlagged();
-            ThenPlayFaceFlagAnimation();
+            ThenPlayPlaceFlagAnimation();
         }
         
         [Test]
@@ -104,6 +104,15 @@ namespace Features.Cell.Tests.Editor
             GivenAPresenterInitialization();
             WhenOnFlagged();
             ThenSetFlagStatusWith(FlagStatus.Removed);
+        }
+        
+        [Test]
+        public void PlayRemoveFlagAnimationWhenOnPlaceFlagIsCalledAndCellHasFlag()
+        {
+            GivenAGetFlagStatueThatReturns(FlagStatus.Placed);
+            GivenAPresenterInitialization();
+            WhenOnFlagged();
+            ThenPlayRemoveFlagAnimation();
         }
 
         private void GivenAPresenterInitialization() =>
@@ -139,7 +148,10 @@ namespace Features.Cell.Tests.Editor
         private void ThenSetFlagStatusWith(FlagStatus flagStatus) => 
                 _setFlagStatus.Received(1).Execute(_presenter, flagStatus);
 
-        private void ThenPlayFaceFlagAnimation() => 
+        private void ThenPlayPlaceFlagAnimation() => 
                 _view.Received(1).PlayPlaceFlagAnimation();
+        
+        private void ThenPlayRemoveFlagAnimation() => 
+                _view.Received(1).PlayRemoveFlagAnimation();
     }
 }
