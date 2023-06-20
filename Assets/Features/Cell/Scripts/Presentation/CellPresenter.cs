@@ -1,73 +1,50 @@
 ﻿using System;
 using Features.Cell.Scripts.Domain;
 using Features.Cell.Scripts.Domain.Actions;
+using Features.Cell.Tests.Editor;
 using UniRx;
 
 namespace Features.Cell.Scripts.Presentation
 {
     public class CellPresenter
     {
-        private readonly IGetCellType _getCellType;
         private readonly IPublishOnBombPressed _publishOnBombPressed;
-        private readonly IPublishOnBlankSpacePressed _publishOnBlankSpacePressed;
-        private readonly IGetFlagStatus _getFlagStatus;
-        private readonly ISetFlagStatus _setFlagStatus;
-        private readonly IGetAmountOfBombsNearby _getAmountOfBombsNearby;
+        private readonly IPublishOnBlankPressed _publishOnBlankPressed;
+        private readonly IUpdateCellSecondaryStatus _onCellSecondaryStatusChange;
+        private readonly IPublishOnCellSecondaryStatusChange _publishOnCellSecondaryStatusChange;
         private readonly ICellView _view;
 
-        public CellPresenter(IGetCellType getCellType,
-                             IPublishOnBombPressed publishOnBombPressed,
-                             IPublishOnBlankSpacePressed publishOnBlankSpacePressed,
-                             IGetFlagStatus getFlagStatus,
-                             ISetFlagStatus setFlagStatus,
-                             IGetAmountOfBombsNearby getAmountOfBombsNearby,
+        public CellPresenter(IPublishOnBombPressed publishOnBombPressed,
+                             IPublishOnBlankPressed publishOnBlankPressed,
+                             IUpdateCellSecondaryStatus onCellSecondaryStatusChange,
+                             IPublishOnCellSecondaryStatusChange publishOnCellSecondaryStatusChange,
                              ICellView view)
         {
-            _getCellType = getCellType;
             _publishOnBombPressed = publishOnBombPressed;
-            _publishOnBlankSpacePressed = publishOnBlankSpacePressed;
-            _getFlagStatus = getFlagStatus;
-            _setFlagStatus = setFlagStatus;
-            _getAmountOfBombsNearby = getAmountOfBombsNearby;
+            _publishOnBlankPressed = publishOnBlankPressed;
+            _onCellSecondaryStatusChange = onCellSecondaryStatusChange;
+            _publishOnCellSecondaryStatusChange = publishOnCellSecondaryStatusChange;
             _view = view;
         }
 
-        public void Initialize()
+        public void Initialize(MineSweeperCell cell)
         {
-            _view.OnPressed += OnViewPressed;
-            _view.OnFlagged += OnViewFlagged;
-            _getAmountOfBombsNearby.Execute()
-                                   .Do(_ => _view.DisplayAmountOfBombsNearby(_))
-                                   .Subscribe();
+            _view.OnPressed += () => OnViewPressed(cell);
+            _view.OnSecondaryPressed += () => OnViewSecondaryPressed(cell);
         }
 
-        private void OnViewPressed() => _getCellType.Execute()
-                                                    .Do(OnCellTypeObtained)
-                                                    .Subscribe();
+        private void OnViewPressed(MineSweeperCell cell) => Observable.Return(cell)
+                                                                      .Do(OnPressed)
+                                                                      .Subscribe();
 
-        private void OnViewFlagged() => _getFlagStatus.Execute()
-                                                      .Do(OnFlagStatusObtained)
-                                                      .Subscribe();
+        private void OnViewSecondaryPressed(MineSweeperCell cell) => Observable.Return(cell)
+                                                                      .Do(OnSecondaryPressed)
+                                                                      .Subscribe();
 
-        private void OnCellTypeObtained(CellType cellType)
+        private void OnPressed(MineSweeperCell mineSweeperCell)
         {
-            switch (cellType)
-            {
-                case CellType.Bomb:
-                    OnBombPressed();
-                    break;
-                case CellType.Blank:
-                    OnBlankSpacePressed();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(cellType), cellType, null);
-            }
-        }
-
-        private void OnBlankSpacePressed()
-        {
-            _view.PlayOnBlankSpacePressedAnimation();
-            _publishOnBlankSpacePressed.Execute();
+            if (mineSweeperCell.IsBomb) OnBombPressed();
+            else OnBlankSpacePressed(mineSweeperCell);
         }
 
         private void OnBombPressed()
@@ -76,31 +53,45 @@ namespace Features.Cell.Scripts.Presentation
             _publishOnBombPressed.Execute();
         }
 
-        private void OnFlagStatusObtained(FlagStatus flagStatus)
+        private void OnBlankSpacePressed(MineSweeperCell mineSweeperCell)
         {
-            switch (flagStatus)
-            {
-                case FlagStatus.Placed:
-                    RemoveFlag();
-                    break;
-                case FlagStatus.Removed:
-                    PlaceFlag();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(flagStatus), flagStatus, null);
-            }
+            _view.PlayOnBlankSpacePressedAnimation();
+            _view.DisplayAmountOfBombsNearby(mineSweeperCell.BombsNearby);
+            _publishOnBlankPressed.Execute();
         }
 
-        private void PlaceFlag()
+        private void OnSecondaryPressed(MineSweeperCell mineSweeperCell)
         {
-            _setFlagStatus.Execute(this, FlagStatus.Placed);
+            var cellSecondaryStatus = mineSweeperCell.SecondaryStatus;
+            if (cellSecondaryStatus == CellSecondaryStatus.Blank)
+                MoveFromBlankToFlagged(mineSweeperCell);
+            else if (cellSecondaryStatus == CellSecondaryStatus.Flagged)
+                MoveFromFlaggedToMystery(mineSweeperCell);
+            else if (cellSecondaryStatus == CellSecondaryStatus.Mystery)
+                MoveFromMysteryToBlank(mineSweeperCell);
+            else
+                throw new ArgumentOutOfRangeException(nameof(cellSecondaryStatus), cellSecondaryStatus, null);
+        }
+
+        private void MoveFromBlankToFlagged(MineSweeperCell mineSweeperCell)
+        {
             _view.PlayPlaceFlagAnimation();
+            _onCellSecondaryStatusChange.Execute(mineSweeperCell, CellSecondaryStatus.Flagged);
+            _publishOnCellSecondaryStatusChange.Execute(CellSecondaryStatus.Flagged);
         }
 
-        private void RemoveFlag()
+        private void MoveFromFlaggedToMystery(MineSweeperCell mineSweeperCell)
         {
-            _setFlagStatus.Execute(this, FlagStatus.Removed);
-            _view.PlayRemoveFlagAnimation();
+            _view.PlayPlaceMysteryAnimation();
+            _onCellSecondaryStatusChange.Execute(mineSweeperCell, CellSecondaryStatus.Mystery);
+            _publishOnCellSecondaryStatusChange.Execute(CellSecondaryStatus.Mystery);
+        }
+
+        private void MoveFromMysteryToBlank(MineSweeperCell mineSweeperCell)
+        {
+            _view.PlayBlankAnimation();
+            _onCellSecondaryStatusChange.Execute(mineSweeperCell, CellSecondaryStatus.Blank);
+            _publishOnCellSecondaryStatusChange.Execute(CellSecondaryStatus.Blank);
         }
     }
 }

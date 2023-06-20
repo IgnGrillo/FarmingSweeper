@@ -1,6 +1,6 @@
 ﻿namespace Features.Cell.Scripts.Domain.Actions
 {
-    public interface IPublishOnBlankSpacePressed
+    public interface IPublishOnBlankPressed
     {
         void Execute();
     }

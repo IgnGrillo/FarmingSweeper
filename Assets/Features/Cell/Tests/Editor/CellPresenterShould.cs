@@ -1,57 +1,42 @@
-﻿using System;
-using Features.Cell.Scripts.Domain;
+﻿using Features.Cell.Scripts.Domain;
 using Features.Cell.Scripts.Domain.Actions;
 using Features.Cell.Scripts.Presentation;
 using NSubstitute;
 using NUnit.Framework;
-using UniRx;
 using static NSubstitute.Substitute;
 
 namespace Features.Cell.Tests.Editor
 {
     public class CellPresenterShould
     {
-        private IGetCellType _getCellType;
         private IPublishOnBombPressed _publishOnBombPressed;
-        private IPublishOnBlankSpacePressed _publishOnBlankSpacePressed;
-        private IGetFlagStatus _getFlagStatus;
-        private ISetFlagStatus _setFlagStatus;
-        private IGetAmountOfBombsNearby _getAmountOfBombsNearby;
+        private IPublishOnBlankPressed _publishOnBlankPressed;
+        private IUpdateCellSecondaryStatus _updateCellSecondaryStatus;
+        private IPublishOnCellSecondaryStatusChange _publishOnCellSecondaryStatusChange;
         private ICellView _view;
         private CellPresenter _presenter;
 
         [SetUp]
         public void SetUp()
         {
-            _getCellType = For<IGetCellType>();
             _publishOnBombPressed = For<IPublishOnBombPressed>();
-            _publishOnBlankSpacePressed = For<IPublishOnBlankSpacePressed>();
-            _getFlagStatus = For<IGetFlagStatus>();
-            _setFlagStatus = For<ISetFlagStatus>();
-            _getAmountOfBombsNearby = For<IGetAmountOfBombsNearby>();
+            _publishOnBlankPressed = For<IPublishOnBlankPressed>();
+            _publishOnCellSecondaryStatusChange = For<IPublishOnCellSecondaryStatusChange>();
+            _updateCellSecondaryStatus = For<IUpdateCellSecondaryStatus>();
             _view = For<ICellView>();
-            _presenter = new CellPresenter(_getCellType,
+            _presenter = new CellPresenter(
                     _publishOnBombPressed,
-                    _publishOnBlankSpacePressed,
-                    _getFlagStatus,
-                    _setFlagStatus,
-                    _getAmountOfBombsNearby,
+                    _publishOnBlankPressed,
+                    _updateCellSecondaryStatus,
+                    _publishOnCellSecondaryStatusChange,
                     _view);
-        }
-
-        [Test]
-        public void GetCellTypeWhenPressed()
-        {
-            GivenAPresenterInitialization();
-            WhenViewIsPressed();
-            ThenGetCellTypeIsCalled();
         }
 
         [Test]
         public void SendOnBombPressedEventWhenABombWasPressed()
         {
-            GivenAGetCellTypeThatReturns(CellType.Bomb);
-            GivenAPresenterInitialization();
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(true);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
             WhenViewIsPressed();
             ThenPublishOnBombPressedIsCalled();
         }
@@ -59,8 +44,8 @@ namespace Features.Cell.Tests.Editor
         [Test]
         public void PlayOnBombPressedAnimationWhenABombWasPressed()
         {
-            GivenAGetCellTypeThatReturns(CellType.Bomb);
-            GivenAPresenterInitialization();
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(true);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
             WhenViewIsPressed();
             ThenPlayOnBombPressedAnimation();
         }
@@ -68,96 +53,115 @@ namespace Features.Cell.Tests.Editor
         [Test]
         public void SendOnBlankSpacePressedEventWhenABlankSpaceWasPressed()
         {
-            GivenAGetCellTypeThatReturns(CellType.Blank);
-            GivenAPresenterInitialization();
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(false);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
             WhenViewIsPressed();
             ThenPublishOnBlankSpacePressedIsCalled();
         }
-        
+
         [Test]
         public void PlayOnBlankSpacePressedAnimationWhenABlankSpaceWasPressed()
         {
-            GivenAGetCellTypeThatReturns(CellType.Blank);
-            GivenAPresenterInitialization();
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(false);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
             WhenViewIsPressed();
             ThenPlayOnBlankSpacePressedAnimation();
         }
 
         [Test]
-        public void SetFlagStatusAsPlacedWhenOnPlaceFlagIsCalledAndCellHasNoFlag()
+        public void PlayPlaceFlagAnimationWhenOnSecondaryPressedIsCalledAndCellHasNoFlag()
         {
-            GivenAGetFlagStatueThatReturns(FlagStatus.Removed);
-            GivenAPresenterInitialization();
-            WhenOnFlagged();
-            ThenSetFlagStatusWith(FlagStatus.Placed);
-        }
-
-        [Test]
-        public void PlayPlaceFlagAnimationWhenOnPlaceFlagIsCalledAndCellHasNoFlag()
-        {
-            GivenAGetFlagStatueThatReturns(FlagStatus.Removed);
-            GivenAPresenterInitialization();
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(secondaryStatus: CellSecondaryStatus.Blank);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
             WhenOnFlagged();
             ThenPlayPlaceFlagAnimation();
         }
-        
+
         [Test]
-        public void SetFlagStatusAsNotPlacedWhenOnPlaceFlagIsCalledAndCellHasFlagPlaced()
+        public void SetFlagStatusAsPlacedWhenOnSecondaryPressedIsCalledAndCellHasNoFlag()
         {
-            GivenAGetFlagStatueThatReturns(FlagStatus.Placed);
-            GivenAPresenterInitialization();
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(secondaryStatus: CellSecondaryStatus.Blank);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
             WhenOnFlagged();
-            ThenSetFlagStatusWith(FlagStatus.Removed);
+            ThenUpdateSecondaryStatueTo(aMineSweeperCellWithBomb, CellSecondaryStatus.Flagged);
         }
-        
+
         [Test]
-        public void PlayRemoveFlagAnimationWhenOnPlaceFlagIsCalledAndCellHasFlag()
+        public void PublishOnCellSecondaryStatusChangeToFlaggedWhenOnSecondaryPressedIsCalledAndCellHasNoFlag()
         {
-            GivenAGetFlagStatueThatReturns(FlagStatus.Placed);
-            GivenAPresenterInitialization();
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(secondaryStatus: CellSecondaryStatus.Blank);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
             WhenOnFlagged();
-            ThenPlayRemoveFlagAnimation();
+            ThenPublishOnSecondaryStatusChangeTo(CellSecondaryStatus.Flagged);
         }
 
         [Test]
-        public void GetAmountOfBombsNearbyIsCalledWhenPresenterIsInitialized()
+        public void PlayPlaceMysteryAnimationWhenOnSecondaryPressedIsCalledAndCellHasFlag()
         {
-            WhenInitialized();
-            ThenGetAmountOfBombsIsCalled();
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(secondaryStatus: CellSecondaryStatus.Flagged);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
+            WhenOnFlagged();
+            ThenPlayPlaceMysteryAnimation();
+        }
+
+        [Test]
+        public void SetFlagStatusAsMysteryWhenOnSecondaryPressedIsCalledAndCellHasFlag()
+        {
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(secondaryStatus: CellSecondaryStatus.Flagged);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
+            WhenOnFlagged();
+            ThenUpdateSecondaryStatueTo(aMineSweeperCellWithBomb, CellSecondaryStatus.Mystery);
         }
         
         [Test]
-        public void DisplayAmountOfBombsNearbyWhenPresenterIsInitialized()
+        public void PublishOnCellSecondaryStatusChangeToMysteryWhenOnPlaceFlagIsCalledAndCellHasFlag()
         {
-            var initialAmountOfBombs = new Random().Next(0, 100);
-            GivenAGetAmountOfBombsThatReturn(initialAmountOfBombs);
-            WhenInitialized();
-            ThenDisplayAmountOfBombsIsCalledWith(initialAmountOfBombs);
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(secondaryStatus: CellSecondaryStatus.Flagged);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
+            WhenOnFlagged();
+            ThenPublishOnSecondaryStatusChangeTo(CellSecondaryStatus.Mystery);
+        }
+        
+        [Test]
+        public void PlayPlayBlankAnimationWhenOnSecondaryPressedIsCalledAndCellHasMysterySign()
+        {
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(secondaryStatus: CellSecondaryStatus.Mystery);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
+            WhenOnFlagged();
+            ThenPlayBlankAnimation();
+        }
+        
+        [Test]
+        public void SetFlagStatusAsBlankWhenOnSecondaryPressedIsCalledAndCellHasMysterySign()
+        {
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(secondaryStatus: CellSecondaryStatus.Mystery);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
+            WhenOnFlagged();
+            ThenUpdateSecondaryStatueTo(aMineSweeperCellWithBomb, CellSecondaryStatus.Blank);
+        }
+        
+        [Test]
+        public void PublishOnCellSecondaryStatusChangeToBlankWhenOnPlaceFlagIsCalledAndCellHasMysterySign()
+        {
+            var aMineSweeperCellWithBomb = GivenAMineSweeperCellWith(secondaryStatus: CellSecondaryStatus.Mystery);
+            GivenAPresenterInitialization(aMineSweeperCellWithBomb);
+            WhenOnFlagged();
+            ThenPublishOnSecondaryStatusChangeTo(CellSecondaryStatus.Blank);
         }
 
-        private void GivenAPresenterInitialization() =>
-                _presenter.Initialize();
+        private static MineSweeperCell GivenAMineSweeperCellWith(bool isBomb = false,
+                                                                 CellSecondaryStatus secondaryStatus = CellSecondaryStatus.Blank,
+                                                                 int bombsNearby = 0) => 
+                new(isBomb, secondaryStatus, bombsNearby);
 
-        private void GivenAGetCellTypeThatReturns(CellType cellType) =>
-                _getCellType.Execute().Returns(Observable.Return(cellType));
-
-        private void GivenAGetFlagStatueThatReturns(FlagStatus flagStatus) => 
-                _getFlagStatus.Execute().Returns(Observable.Return(flagStatus));
-
-        private void GivenAGetAmountOfBombsThatReturn(int initialAmountOfBombs) => 
-                _getAmountOfBombsNearby.Execute().Returns(Observable.Return(initialAmountOfBombs));
+        private void GivenAPresenterInitialization(MineSweeperCell mineSweeperCell) =>
+                _presenter.Initialize(mineSweeperCell);
 
         private void WhenViewIsPressed() =>
                 _view.OnPressed.Invoke();
 
-        private void WhenOnFlagged() => 
-                _view.OnFlagged.Invoke();
-
-        private void WhenInitialized() => 
-                _presenter.Initialize();
-
-        private void ThenGetCellTypeIsCalled() =>
-                _getCellType.Received(1).Execute();
+        private void WhenOnFlagged() =>
+                _view.OnSecondaryPressed.Invoke();
 
         private void ThenPublishOnBombPressedIsCalled() =>
                 _publishOnBombPressed.Received(1).Execute();
@@ -166,24 +170,24 @@ namespace Features.Cell.Tests.Editor
                 _view.Received(1).PlayOnBombPressedAnimation();
 
         private void ThenPublishOnBlankSpacePressedIsCalled() =>
-                _publishOnBlankSpacePressed.Received(1).Execute();
+                _publishOnBlankPressed.Received(1).Execute();
 
         private void ThenPlayOnBlankSpacePressedAnimation() =>
                 _view.Received(1).PlayOnBlankSpacePressedAnimation();
 
-        private void ThenSetFlagStatusWith(FlagStatus flagStatus) => 
-                _setFlagStatus.Received(1).Execute(_presenter, flagStatus);
-
-        private void ThenPlayPlaceFlagAnimation() => 
+        private void ThenPlayPlaceFlagAnimation() =>
                 _view.Received(1).PlayPlaceFlagAnimation();
 
-        private void ThenPlayRemoveFlagAnimation() => 
-                _view.Received(1).PlayRemoveFlagAnimation();
+        private void ThenUpdateSecondaryStatueTo(MineSweeperCell cell, CellSecondaryStatus secondaryStatus) =>
+                _updateCellSecondaryStatus.Received(1).Execute(cell, secondaryStatus);
 
-        private void ThenGetAmountOfBombsIsCalled() => 
-                _getAmountOfBombsNearby.Received(1).Execute();
+        private void ThenPublishOnSecondaryStatusChangeTo(CellSecondaryStatus secondaryStatus) =>
+                _publishOnCellSecondaryStatusChange.Received(1).Execute(secondaryStatus);
 
-        private void ThenDisplayAmountOfBombsIsCalledWith(int initialAmountOfBombs) => 
-                _view.Received(1).DisplayAmountOfBombsNearby(initialAmountOfBombs);
+        private void ThenPlayPlaceMysteryAnimation() =>
+                _view.Received(1).PlayPlaceMysteryAnimation();
+        
+        private void ThenPlayBlankAnimation() =>
+                _view.Received(1).PlayBlankAnimation();
     }
 }
