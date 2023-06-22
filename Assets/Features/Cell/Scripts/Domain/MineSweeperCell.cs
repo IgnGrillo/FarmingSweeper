@@ -12,5 +12,7 @@
             SecondaryStatus = secondaryStatus;
             BombsNearby = bombsNearby;
         }
+
+        public static MineSweeperCell InitialBomb() => new MineSweeperCell(false, CellSecondaryStatus.Blank, 0);
     }
 }
