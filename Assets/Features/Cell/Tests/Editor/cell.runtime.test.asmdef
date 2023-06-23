@@ -1,5 +1,5 @@
 {
-    "name": "asd",
+    "name": "cell.runtime.test",
     "rootNamespace": "",
     "references": [
         "cell.runtime",
