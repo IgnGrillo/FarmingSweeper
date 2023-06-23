@@ -1,4 +1,4 @@
-﻿namespace Features.Gameplay.Scripts.Domain.Actions
+﻿namespace Features.Gameplay.Scripts.Domain
 {
     public class MineSweeperBoard { }
 }

@@ -12,6 +12,7 @@ namespace Features.Gameplay.Tests.Editor
         private IRetrieveGameConfiguration _retrieveGameConfiguration;
         private IGenerateInitialBoard _generateInitialBoard;
         private IAnimateBoardAppearance _animateBoardAppearance;
+        private IPublishOnBoardInitializationFinish _publishOnBoardInitializationFinish;
         private GameplayPresenter _presenter;
 
         [SetUp]
@@ -20,9 +21,11 @@ namespace Features.Gameplay.Tests.Editor
             _retrieveGameConfiguration = Substitute.For<IRetrieveGameConfiguration>();
             _generateInitialBoard = Substitute.For<IGenerateInitialBoard>();
             _animateBoardAppearance = Substitute.For<IAnimateBoardAppearance>();
+            _publishOnBoardInitializationFinish = Substitute.For<IPublishOnBoardInitializationFinish>();
             _presenter = new GameplayPresenter(_retrieveGameConfiguration,
                     _generateInitialBoard,
-                    _animateBoardAppearance);
+                    _animateBoardAppearance,
+                    _publishOnBoardInitializationFinish);
         }
 
         [Test]
@@ -52,22 +55,40 @@ namespace Features.Gameplay.Tests.Editor
             ThenAnimateBoardAppearance(mineSweeperBoard);
         }
 
-        private void GivenARetrieveGameConfigurationThatReturns(GameConfiguration gameConfiguration) => 
+        [Test]
+        public void PublishOnBoardInitializationFinishWhenInitializedAndHasAnimatedBoard()
+        {
+            var gameConfiguration = new GameConfiguration();
+            var mineSweeperBoard = new MineSweeperBoard();
+            GivenARetrieveGameConfigurationThatReturns(gameConfiguration);
+            GivenAGenerateInitialBoardThatReturns(mineSweeperBoard);
+            GivenAnAnimateBoardAppearanceThatReturns();
+            WhenInitialized();
+            ThenPublishOnBoardInitializationFinish();
+        }
+
+        private void GivenARetrieveGameConfigurationThatReturns(GameConfiguration gameConfiguration) =>
                 _retrieveGameConfiguration.Execute().Returns(Observable.Return(gameConfiguration));
 
-        private void GivenAGenerateInitialBoardThatReturns(MineSweeperBoard mineSweeperBoard) => 
-                _generateInitialBoard.Execute(Arg.Any<GameConfiguration>()).Returns(Observable.Return(mineSweeperBoard));
-        
+        private void GivenAGenerateInitialBoardThatReturns(MineSweeperBoard mineSweeperBoard) =>
+                _generateInitialBoard.Execute(Arg.Any<GameConfiguration>())
+                                     .Returns(Observable.Return(mineSweeperBoard));
+
+        private void GivenAnAnimateBoardAppearanceThatReturns() =>
+                _animateBoardAppearance.Execute(Arg.Any<MineSweeperBoard>()).Returns(Observable.ReturnUnit());
+
         private void WhenInitialized() =>
                 _presenter.Initialize();
 
         private void ThenRetrieveGameConfiguration() =>
                 _retrieveGameConfiguration.Received(1).Execute();
 
-        private void ThenGenerateInitialBoard(GameConfiguration gameConfiguration) => 
+        private void ThenGenerateInitialBoard(GameConfiguration gameConfiguration) =>
                 _generateInitialBoard.Received(1).Execute(gameConfiguration);
-        
-        private void ThenAnimateBoardAppearance(MineSweeperBoard mineSweeperBoard) => 
+
+        private void ThenAnimateBoardAppearance(MineSweeperBoard mineSweeperBoard) =>
                 _animateBoardAppearance.Received(1).Execute(mineSweeperBoard);
+        private void ThenPublishOnBoardInitializationFinish() =>
+                _publishOnBoardInitializationFinish.Received(1).Execute();
     }
 }
