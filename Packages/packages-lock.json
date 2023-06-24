@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "a3e8fc1861999b25fc5a0831cb7701076c361c93"
     },
+    "com.crispy.poolsystem": {
+      "version": "https://github.com/IgnGrillo/PoolSystem.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f02cd94beca4b8d459371d9fa90fd9dd79743081"
+    },
     "com.unity.2d.animation": {
       "version": "7.0.9",
       "depth": 1,
