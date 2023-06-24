@@ -1,10 +1,13 @@
-﻿namespace Features.Cell.Scripts.Domain
+﻿using UniRx;
+
+namespace Features.Cell.Scripts.Domain
 {
     public class MineSweeperCell
     {
-        public bool IsBomb;
+        public readonly bool IsBomb;
         public CellSecondaryStatus SecondaryStatus;
-        public int BombsNearby;
+        public readonly int BombsNearby;
+        public Subject<Unit> OnAnimateAppearance;
 
         public MineSweeperCell(bool isBomb, CellSecondaryStatus secondaryStatus, int bombsNearby)
         {

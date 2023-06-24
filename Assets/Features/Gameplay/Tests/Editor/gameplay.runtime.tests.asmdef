@@ -3,7 +3,8 @@
   "references": [
     "gameplay.runtime",
     "crispy.eventbus.runtime",
-    "UniRx"
+    "UniRx",
+    "cell.runtime"
   ],
   "includePlatforms": [
     "Editor"

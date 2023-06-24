@@ -1,11 +1,9 @@
-{
-  "name": "gameplay.runtime",
+﻿{
+  "name": "observable_extensions.runtime",
   "rootNamespace": "",
   "references": [
     "crispy.eventbus.runtime",
-    "UniRx",
-    "Unity.TextMeshPro",
-    "cell.runtime"
+    "UniRx"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
