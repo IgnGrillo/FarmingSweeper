@@ -23,7 +23,6 @@ namespace Features.Gameplay.Scripts.Presentation
 
         public void Initialize()
         {
-            //Fluent sintax https://en.wikipedia.org/wiki/Fluent_interface
             _retrieveGameConfiguration.Execute()
                                       .SelectMany(it => _generateInitialBoard.Execute(it))
                                       .Do(it=> _animateBoardAppearance.Execute(it))

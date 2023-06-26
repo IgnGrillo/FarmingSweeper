@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Features.ObservableExtensions.AnimatorExtensions
 {
-    public static class AnimatorExtensions
+    public static class ObservableAnimatorExtensions
     {
         public static IObservable<Unit> WaitUntilAnimationEndsAsObservable(this Animator animator, int state,
                                                                            int layerIndex = 0, float normalizedTimeOffset = 0f)

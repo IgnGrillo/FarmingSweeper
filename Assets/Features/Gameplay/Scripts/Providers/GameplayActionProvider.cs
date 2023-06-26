@@ -4,16 +4,21 @@ namespace Features.Gameplay.Scripts.Providers
 {
     public static class GameplayActionProvider
     {
+        private static RetrieveGameConfiguration _retrieveGameConfiguration;
+        private static GenerateInitialBoard _generateInitialBoard;
+        private static AnimateBoardAppearance _animateBoardAppearance;
+        private static PublishOnBoardInitializationFinish _publishOnBoardInitializationFinish;
+
         public static IRetrieveGameConfiguration GetRetrieveGameConfiguration() =>
-                new RetrieveGameConfiguration();
+                _retrieveGameConfiguration ??= new RetrieveGameConfiguration(GameplayServiceProvider.GetGameConfigurationService());
 
         public static IGenerateInitialBoard GetGenerateInitialBoard() =>
-                new GenerateInitialBoard();
+                _generateInitialBoard ??= new GenerateInitialBoard();
 
         public static IAnimateBoardAppearance GetAnimateBoardAppearance() =>
-                new AnimateBoardAppearance();
+                _animateBoardAppearance ??= new AnimateBoardAppearance();
 
         public static IPublishOnBoardInitializationFinish GetPublishOnBoardInitializationFinish() =>
-                new PublishOnBoardInitializationFinish();
+                _publishOnBoardInitializationFinish ??= new PublishOnBoardInitializationFinish();
     }
 }
