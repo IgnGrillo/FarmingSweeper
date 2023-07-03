@@ -9,27 +9,35 @@ namespace Features.Gameplay.Tests.Editor
 {
     public class RetrieveGameConfigurationShould
     {
-        private IGameConfigurationService _gameConfigurationService;
-        private RetrieveGameConfiguration _retrieveGameConfiguration;
-
         [Test]
         public void RetrieveGameConfigurationShouldSimplePasses()
         {
-            _gameConfigurationService = Substitute.For<IGameConfigurationService>();
-            _retrieveGameConfiguration = new RetrieveGameConfiguration(_gameConfigurationService);
-            var gameConfiguration = GivenAGameConfiguration();
-            var gameConfigurationObtained = new GameConfiguration();
-            GivenAGameConfigurationServiceThatReturns(gameConfiguration);
-            WhenExecute().Subscribe(onNext: configuration =>  gameConfigurationObtained = configuration);
-            Assert.AreEqual(gameConfiguration, gameConfigurationObtained);
+            var gameConfigurationService = GivenAGameConfigurationService();
+            var retrieveGameConfiguration = GivenARetrieveGameConfiguration(gameConfigurationService);
+            var expectedGameConfiguration = GivenAGameConfiguration();
+            GameConfiguration gameConfigurationObtained = null;
+            GivenAGameConfigurationServiceThatReturns(gameConfigurationService, expectedGameConfiguration);
+            WhenExecute(retrieveGameConfiguration).Subscribe(onNext: configuration =>  gameConfigurationObtained = configuration);
+            ThenGameConfigurationIs(expectedGameConfiguration, gameConfigurationObtained);
         }
 
-        private static GameConfiguration GivenAGameConfiguration() => new();
+        private static IGameConfigurationService GivenAGameConfigurationService() => 
+                        Substitute.For<IGameConfigurationService>();
 
-        private void GivenAGameConfigurationServiceThatReturns(GameConfiguration gameConfiguration) => 
-                _gameConfigurationService.GetGameConfiguration().Returns(Observable.Return(gameConfiguration));
+        private static IRetrieveGameConfiguration GivenARetrieveGameConfiguration(IGameConfigurationService gameConfigurationService) => 
+                        new RetrieveGameConfiguration(gameConfigurationService);
 
-        private IObservable<GameConfiguration> WhenExecute() => 
-                _retrieveGameConfiguration.Execute();
+        private static GameConfiguration GivenAGameConfiguration() => 
+                new();
+
+        private static void GivenAGameConfigurationServiceThatReturns(IGameConfigurationService gameConfigurationService, GameConfiguration gameConfiguration) => 
+                gameConfigurationService.GetGameConfiguration().Returns(Observable.Return(gameConfiguration));
+
+        private static IObservable<GameConfiguration> WhenExecute(IRetrieveGameConfiguration retrieveGameConfiguration) => 
+                retrieveGameConfiguration.Execute();
+
+        private static void ThenGameConfigurationIs(GameConfiguration expectedGameConfiguration,
+                                                    GameConfiguration actualGameConfigurationObtained) => 
+                Assert.AreEqual(expectedGameConfiguration, actualGameConfigurationObtained);
     }
 }
