@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fa0c8da232312fe47ad812491cbfdb0d
+guid: ddfd43235f92da040944323b7fcd6b61
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: ModelMat
-    second: {fileID: 2100000, guid: 65b9c5553c9341049954b8034496e4b8, type: 2}
+    second: {fileID: 2100000, guid: 3f168d1d66622c348afbbf4ed029a87f, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -75,7 +75,7 @@ ModelImporter:
     useFileScale: 1
     strictVertexDataChecks: 0
   tangentSpace:
-    normalSmoothAngle: 90
+    normalSmoothAngle: 30
     normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
