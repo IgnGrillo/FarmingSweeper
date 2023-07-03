@@ -1,14 +1,14 @@
 fileFormatVersion: 2
-guid: 33156394532c74f4e977f3e520b4bc8b
+guid: fa0c8da232312fe47ad812491cbfdb0d
 ModelImporter:
-  serializedVersion: 21300
+  serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: ModelMat
-    second: {fileID: 2100000, guid: 3c602857e1f5ec9419dcc6b013b6f3d0, type: 2}
+    second: {fileID: 2100000, guid: 65b9c5553c9341049954b8034496e4b8, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -40,11 +40,12 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.1
+    globalScale: 0.05
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -72,8 +73,9 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
-    normalSmoothAngle: 45
+    normalSmoothAngle: 90
     normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
@@ -93,7 +95,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.1
+    globalScale: 0.05
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
@@ -104,6 +106,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
