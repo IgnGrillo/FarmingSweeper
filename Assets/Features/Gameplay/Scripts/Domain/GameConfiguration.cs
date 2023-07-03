@@ -7,8 +7,10 @@
     
     public enum BoardConfiguration
     {
-        Board3X3 = 0,
+        Board5X5 = 0,
         Board6X6 = 1,
-        Board9X9 = 2
+        Board7X7 = 2,
+        Board8X8 = 3,
+        Board9X9 = 4
     }
 }

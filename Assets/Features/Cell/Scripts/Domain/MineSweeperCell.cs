@@ -16,6 +16,6 @@ namespace Features.Cell.Scripts.Domain
             BombsNearby = bombsNearby;
         }
 
-        public static MineSweeperCell InitialBomb() => new MineSweeperCell(false, CellSecondaryStatus.Blank, 0);
+        public static MineSweeperCell BlankBomb() => new MineSweeperCell(false, CellSecondaryStatus.Blank, 0);
     }
 }

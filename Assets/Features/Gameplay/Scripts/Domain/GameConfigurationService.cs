@@ -6,6 +6,6 @@ namespace Features.Gameplay.Scripts.Domain
     public class GameConfigurationService : IGameConfigurationService
     {
         public IObservable<GameConfiguration> GetGameConfiguration() =>
-                Observable.Return(new GameConfiguration { BoardConfiguration = BoardConfiguration.Board3X3 });
+                Observable.Return(new GameConfiguration { BoardConfiguration = BoardConfiguration.Board5X5 });
     }
 }

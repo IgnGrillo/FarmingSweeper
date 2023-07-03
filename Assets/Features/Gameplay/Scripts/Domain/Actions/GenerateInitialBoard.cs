@@ -1,4 +1,5 @@
 ﻿using System;
+using Features.Cell.Scripts.Domain;
 using UniRx;
 
 namespace Features.Gameplay.Scripts.Domain.Actions
@@ -7,7 +8,47 @@ namespace Features.Gameplay.Scripts.Domain.Actions
     {
         public IObservable<MineSweeperBoard> Execute(GameConfiguration gameConfiguration)
         {
-            return Observable.Return(new MineSweeperBoard());
+            return Observable.Return(new MineSweeperBoard
+            {
+                Cells = new[,]
+                {
+                    {
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb()
+                    },
+                    {
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb()
+                    },
+                    {
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb()
+                    },
+                    {
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb()
+                    },
+                    {
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb(),
+                        MineSweeperCell.BlankBomb()
+                    }
+                }
+            });
         }
     }
 }

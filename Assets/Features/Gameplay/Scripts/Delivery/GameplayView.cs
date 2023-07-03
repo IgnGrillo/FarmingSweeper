@@ -1,6 +1,6 @@
 ﻿using Features.Gameplay.Scripts.Presentation;
-using Features.Gameplay.Scripts.Providers;
 using UnityEngine;
+using static Features.Gameplay.Scripts.Providers.GameplayActionProvider;
 
 namespace Features.Gameplay.Scripts.Delivery
 {
@@ -8,10 +8,10 @@ namespace Features.Gameplay.Scripts.Delivery
     {
         private void Start()
         {
-            new GameplayPresenter(GameplayActionProvider.GetRetrieveGameConfiguration(),
-                    GameplayActionProvider.GetGenerateInitialBoard(),
-                    GameplayActionProvider.GetAnimateBoardAppearance(),
-                    GameplayActionProvider.GetPublishOnBoardInitializationFinish()).Initialize();
+            new GameplayPresenter(GetRetrieveGameConfiguration(),
+                    GetGenerateInitialBoard(),
+                    GetAnimateBoardAppearance(),
+                    GetPublishOnBoardInitializationFinish()).Initialize();
         }
     }
 }
