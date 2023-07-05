@@ -18,4 +18,14 @@ namespace Features.Cell.Scripts.Domain
 
         public static MineSweeperCell BlankBomb() => new MineSweeperCell(false, CellSecondaryStatus.Blank, 0);
     }
+
+    public static class MineSweeperCellExtension
+    {
+        public static bool IsBlank(this MineSweeperCell cell)
+        {
+            return !cell.IsBomb &&
+                    cell.SecondaryStatus == CellSecondaryStatus.Blank &&
+                    cell.BombsNearby == 0;
+        }
+    }
 }

@@ -5,7 +5,7 @@ namespace Features.Gameplay.Scripts.Providers
     public static class GameplayActionProvider
     {
         private static RetrieveGameConfiguration _retrieveGameConfiguration;
-        private static GenerateInitialBoard _generateInitialBoard;
+        private static CreateMineSweeperBoard _createMineSweeperBoard;
         private static AnimateBoardAppearance _animateBoardAppearance;
         private static PublishOnBoardInitializationFinish _publishOnBoardInitializationFinish;
 
@@ -13,7 +13,7 @@ namespace Features.Gameplay.Scripts.Providers
                 _retrieveGameConfiguration ??= new RetrieveGameConfiguration(GameplayServiceProvider.GetGameConfigurationService());
 
         public static IGenerateInitialBoard GetGenerateInitialBoard() =>
-                _generateInitialBoard ??= new GenerateInitialBoard();
+                _createMineSweeperBoard ??= new CreateMineSweeperBoard();
 
         public static IAnimateBoardAppearance GetAnimateBoardAppearance() =>
                 _animateBoardAppearance ??= new AnimateBoardAppearance();
