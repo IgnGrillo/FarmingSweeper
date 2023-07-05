@@ -38,12 +38,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ColorTreshold: 10
-    - _MaxDistance: 50
+    - _ColorTreshold: 5
+    - _MaxDistance: 100
     - _MinDistance: 0.01
-    - _NormalTreshold: 0.73
+    - _NormalTreshold: 0.001
     - _OVERLAY: 1
     m_Colors:
     - _DistanceTolerance: {r: 1, g: 1, b: 0, a: 0}
-    - _Outline_Color: {r: 0, g: 1, b: 0.43015313, a: 1}
+    - _Outline_Color: {r: 0, g: 0.4534084, b: 0.46226418, a: 1}
   m_BuildTextureStacks: []

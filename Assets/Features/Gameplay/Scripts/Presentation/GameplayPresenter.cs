@@ -24,8 +24,8 @@ namespace Features.Gameplay.Scripts.Presentation
         public void Initialize()
         {
             _retrieveGameConfiguration.Execute()
-                                      .SelectMany(it => _generateInitialBoard.Execute(it))
-                                      .Do(it=> _animateBoardAppearance.Execute(it))
+                                      .SelectMany(gameConfiguration => _generateInitialBoard.Execute(gameConfiguration))
+                                      .Do(mineSweeperBoard=> _animateBoardAppearance.Execute(mineSweeperBoard))
                                       .SelectMany(_ => _publishOnBoardInitializationFinish.Execute())
                                       .Subscribe();
         }
