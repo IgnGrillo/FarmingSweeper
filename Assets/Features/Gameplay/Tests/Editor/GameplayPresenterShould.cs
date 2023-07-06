@@ -10,7 +10,7 @@ namespace Features.Gameplay.Tests.Editor
     public class GameplayPresenterShould
     {
         private IRetrieveGameConfiguration _retrieveGameConfiguration;
-        private IGenerateInitialBoard _generateInitialBoard;
+        private ICreateMineSweeperBoard _createMineSweeperBoard;
         private IAnimateBoardAppearance _animateBoardAppearance;
         private IPublishOnBoardInitializationFinish _publishOnBoardInitializationFinish;
         private GameplayPresenter _presenter;
@@ -19,11 +19,11 @@ namespace Features.Gameplay.Tests.Editor
         public void SetUp()
         {
             _retrieveGameConfiguration = Substitute.For<IRetrieveGameConfiguration>();
-            _generateInitialBoard = Substitute.For<IGenerateInitialBoard>();
+            _createMineSweeperBoard = Substitute.For<ICreateMineSweeperBoard>();
             _animateBoardAppearance = Substitute.For<IAnimateBoardAppearance>();
             _publishOnBoardInitializationFinish = Substitute.For<IPublishOnBoardInitializationFinish>();
             _presenter = new GameplayPresenter(_retrieveGameConfiguration,
-                    _generateInitialBoard,
+                    _createMineSweeperBoard,
                     _animateBoardAppearance,
                     _publishOnBoardInitializationFinish);
         }
@@ -71,7 +71,7 @@ namespace Features.Gameplay.Tests.Editor
                 _retrieveGameConfiguration.Execute().Returns(Observable.Return(gameConfiguration));
 
         private void GivenAGenerateInitialBoardThatReturns(MineSweeperBoard mineSweeperBoard) =>
-                _generateInitialBoard.Execute(Arg.Any<GameConfiguration>())
+                _createMineSweeperBoard.Execute(Arg.Any<GameConfiguration>())
                                      .Returns(Observable.Return(mineSweeperBoard));
 
         private void GivenAnAnimateBoardAppearanceThatReturns() =>
@@ -84,7 +84,7 @@ namespace Features.Gameplay.Tests.Editor
                 _retrieveGameConfiguration.Received(1).Execute();
 
         private void ThenGenerateInitialBoard(GameConfiguration gameConfiguration) =>
-                _generateInitialBoard.Received(1).Execute(gameConfiguration);
+                _createMineSweeperBoard.Received(1).Execute(gameConfiguration);
 
         private void ThenAnimateBoardAppearance(MineSweeperBoard mineSweeperBoard) =>
                 _animateBoardAppearance.Received(1).Execute(mineSweeperBoard);

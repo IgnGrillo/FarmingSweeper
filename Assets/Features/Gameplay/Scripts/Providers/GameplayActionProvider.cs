@@ -12,7 +12,7 @@ namespace Features.Gameplay.Scripts.Providers
         public static IRetrieveGameConfiguration GetRetrieveGameConfiguration() =>
                 _retrieveGameConfiguration ??= new RetrieveGameConfiguration(GameplayServiceProvider.GetGameConfigurationService());
 
-        public static IGenerateInitialBoard GetGenerateInitialBoard() =>
+        public static ICreateMineSweeperBoard GetGenerateInitialBoard() =>
                 _createMineSweeperBoard ??= new CreateMineSweeperBoard();
 
         public static IAnimateBoardAppearance GetAnimateBoardAppearance() =>

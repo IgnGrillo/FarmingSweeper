@@ -1,12 +1,9 @@
-{
-  "name": "gameplay.runtime",
+﻿{
+  "name": "board.runtime",  
   "rootNamespace": "",
   "references": [
     "crispy.eventbus.runtime",
-    "UniRx",
-    "Unity.TextMeshPro",
-    "cell.runtime",
-    "board.runtime"
+    "UniRx"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

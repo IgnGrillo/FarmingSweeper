@@ -4,7 +4,7 @@ using UniRx;
 
 namespace Features.Gameplay.Scripts.Domain.Actions
 {
-    public class CreateMineSweeperBoard : IGenerateInitialBoard
+    public class CreateMineSweeperBoard : ICreateMineSweeperBoard
     {
         public IObservable<MineSweeperBoard> Execute(GameConfiguration gameConfiguration) => 
                 Observable.Return(new MineSweeperBoard(cells: GetCellsForAConfigurationOf(gameConfiguration)));
