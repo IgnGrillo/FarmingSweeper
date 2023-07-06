@@ -1,4 +1,7 @@
-﻿using Features.Gameplay.Scripts.Domain.Actions;
+﻿using System;
+using Features.Board.Scripts.Delivery;
+using Features.Gameplay.Scripts.Domain;
+using Features.Gameplay.Scripts.Domain.Actions;
 using UniRx;
 
 namespace Features.Gameplay.Scripts.Presentation
@@ -13,11 +16,13 @@ namespace Features.Gameplay.Scripts.Presentation
 
         public GameplayPresenter(IRetrieveGameConfiguration retrieveGameConfiguration,
                                  ICreateMineSweeperBoard createMinesweeperBoard,
+                                 ICreateGameIsland createGameIsland,
                                  IAnimateBoardAppearance animateBoardAppearance,
                                  IPublishOnBoardInitializationFinish publishOnBoardInitializationFinish)
         {
             _retrieveGameConfiguration = retrieveGameConfiguration;
             _createMinesweeperBoard = createMinesweeperBoard;
+            _createGameIsland = createGameIsland;
             _animateBoardAppearance = animateBoardAppearance;
             _publishOnBoardInitializationFinish = publishOnBoardInitializationFinish;
         }
@@ -25,11 +30,20 @@ namespace Features.Gameplay.Scripts.Presentation
         public void Initialize()
         {
             _retrieveGameConfiguration.Execute()
-                                      .SelectMany(gameConfiguration => _createMinesweeperBoard.Execute(gameConfiguration))
-                                      .Do(minesweeperBoard => _createGameIsland.Execute(minesweeperBoard))
-                                      .Do(mineSweeperBoard => _animateBoardAppearance.Execute(mineSweeperBoard))
-                                      .SelectMany(_ => _publishOnBoardInitializationFinish.Execute())
+                                      .SelectMany(CreateMineSweeperBoard)
+                                      .SelectMany(CreateGameIsland)
+                                      //.SelectMany(_ => _animateBoardAppearance.Execute())
+                                      .SelectMany(_ => PublishOnBoardInitializationFinish())
                                       .Subscribe();
         }
+
+        private IObservable<MineSweeperBoard> CreateMineSweeperBoard(GameConfiguration gameConfiguration) => 
+                _createMinesweeperBoard.Execute(gameConfiguration);
+
+        private IObservable<BoardView> CreateGameIsland(MineSweeperBoard mineSweeperBoard) => 
+                _createGameIsland.Execute(mineSweeperBoard);
+
+        private IObservable<Unit> PublishOnBoardInitializationFinish() => 
+                _publishOnBoardInitializationFinish.Execute();
     }
 }

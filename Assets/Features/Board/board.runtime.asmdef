@@ -3,6 +3,7 @@
   "rootNamespace": "",
   "references": [
     "crispy.eventbus.runtime",
+    "cell.runtime",
     "UniRx"
   ],
   "includePlatforms": [],

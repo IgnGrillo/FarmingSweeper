@@ -1,9 +1,10 @@
-﻿using Features.Board.Delivery;
+﻿using System;
+using Features.Board.Scripts.Delivery;
 
 namespace Features.Gameplay.Scripts.Domain.Actions
 {
     public interface ICreateGameIsland
     {
-        BoardView Execute(MineSweeperBoard minesweeperBoard);
+        IObservable<BoardView> Execute(MineSweeperBoard minesweeperBoard);
     }
 }

@@ -6,10 +6,13 @@ namespace Features.Gameplay.Scripts.Delivery
 {
     public class GameplayView : MonoBehaviour
     {
+        [SerializeField] private CreateGameIslandData createGameIslandData;
+        
         private void Start()
         {
             new GameplayPresenter(GetRetrieveGameConfiguration(),
-                    GetGenerateInitialBoard(),
+                    GetGenerateInitialBoard(), 
+                    GetCreateGameIsland(createGameIslandData),
                     GetAnimateBoardAppearance(),
                     GetPublishOnBoardInitializationFinish()).Initialize();
         }

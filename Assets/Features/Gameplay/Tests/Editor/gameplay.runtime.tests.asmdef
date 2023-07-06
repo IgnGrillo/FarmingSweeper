@@ -3,6 +3,7 @@
   "references": [
     "gameplay.runtime",
     "crispy.eventbus.runtime",
+    "board.runtime",
     "UniRx",
     "cell.runtime"
   ],

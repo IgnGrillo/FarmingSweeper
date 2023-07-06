@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f793fd8a0e147b6a7766c5730f0514a, type: 3}
+  m_Name: CreateGameIslandData
+  m_EditorClassIdentifier: 
+  BoardView: {fileID: 3345849423156738791, guid: 7d905206b4d56724e86f44f36d54558d, type: 3}

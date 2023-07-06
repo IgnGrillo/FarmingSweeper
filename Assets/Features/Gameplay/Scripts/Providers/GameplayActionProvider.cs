@@ -1,4 +1,5 @@
-﻿using Features.Gameplay.Scripts.Domain.Actions;
+﻿using Features.Gameplay.Scripts.Delivery;
+using Features.Gameplay.Scripts.Domain.Actions;
 
 namespace Features.Gameplay.Scripts.Providers
 {
@@ -6,6 +7,7 @@ namespace Features.Gameplay.Scripts.Providers
     {
         private static RetrieveGameConfiguration _retrieveGameConfiguration;
         private static CreateMineSweeperBoard _createMineSweeperBoard;
+        private static CreateGameIsland _createGameIsland;
         private static AnimateBoardAppearance _animateBoardAppearance;
         private static PublishOnBoardInitializationFinish _publishOnBoardInitializationFinish;
 
@@ -14,6 +16,9 @@ namespace Features.Gameplay.Scripts.Providers
 
         public static ICreateMineSweeperBoard GetGenerateInitialBoard() =>
                 _createMineSweeperBoard ??= new CreateMineSweeperBoard();
+        
+        public static ICreateGameIsland GetCreateGameIsland(CreateGameIslandData createGameIslandData) =>
+                        _createGameIsland ??= new CreateGameIsland(createGameIslandData);
 
         public static IAnimateBoardAppearance GetAnimateBoardAppearance() =>
                 _animateBoardAppearance ??= new AnimateBoardAppearance();
